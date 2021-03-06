@@ -26,7 +26,7 @@ class ModelEvaluation:
             errors = {"Tree":[], "SVR":[], "RF":[], "ANN":[]}
             params = {"Tree":[], "SVR":[], "RF":[], "ANN":[]}
             for i in range(10000):
-                x0 = time()
+                t0 = time()
                 X_train, X_test, Y_train, Y_test = train_test_split(cluster[self.x_cols], cluster[self.y_cols], test_size=0.2)
                 
                 tree, tree_error, best_params = self.createDesitionTreeRegressor(X_train, Y_train, X_test, Y_test)
