@@ -11,12 +11,12 @@ from time import time
 
 class ModelEvaluation:
 
-    def __init__(self, clusters, x_cols, y_cols):
+    def __init__(self, clusters, x_cols, y_cols, simulations):
         self.clusters = clusters
         self.x_cols = x_cols
         self.y_cols = y_cols
+        self.simulations = simulations
         self.results = self.createModels()
-
 
     def createModels(self):
         models = {"1":[], "2":[], "3":[], "4":[], "5":[]}
@@ -24,8 +24,9 @@ class ModelEvaluation:
         for cluster in self.clusters:
             c += 1
             errors = {"Tree":[], "SVR":[], "RF":[], "ANN":[]}
+            sigmas = {"Tree":[], "SVR":[], "RF":[], "ANN":[]}
             params = {"Tree":[], "SVR":[], "RF":[], "ANN":[]}
-            for i in range(10000):
+            for i in range(self.simulations):
                 t0 = time()
                 X_train, X_test, Y_train, Y_test = train_test_split(cluster[self.x_cols], cluster[self.y_cols], test_size=0.2)
                 
@@ -46,15 +47,16 @@ class ModelEvaluation:
                 params["ANN"].append(ann_error)
                 
                 tf = time()
-                print(f"Quedan {((tf - t0)/60) * i} minutos.")
+                print(f"Quedan {((tf - t0)/60) * (10000 - i)} minutos.")
 
             for model_name in list(errors.keys()):
-                errors[model] = np.mean(errors[model_name])
+                errors[model_name] = np.mean(errors[model_name])
                 cluster_model = pd.Series(params[model_name])
-
-                params[model] = list(cluster_model.value_counts().index[list(cluster_model.value_counts() == cluster_model.value_counts().max())])
+                sigmas[model_name] = np.std(errors[model_name])
+                params[model_name] = list(cluster_model.value_counts().index[list(cluster_model.value_counts() == cluster_model.value_counts().max())])
             
-            models[str(c)].extend(params, errors)
+            models[str(c)].extend({"Parameters":params}, {"MSE": errors}, {"STD":sigmas})
+        return models
             
 
     def createANNR(self, X_train, Y_train, X_test, Y_test):
