@@ -32,22 +32,22 @@ class ModelEvaluation:
                 
                 tree, tree_error, best_params = self.createDesitionTreeRegressor(X_train, Y_train, X_test, Y_test)
                 errors["Tree"].append(tree_error)
-                params["Tree"].append(tree_error)
+                params["Tree"].append(best_params)
 
                 svr, svr_error, best_kernel = self.createSVR(X_train, Y_train, X_test, Y_test)
                 errors["SVR"].append(svr_error)
-                params["SVR"].append(svr_error)
+                params["SVR"].append(best_kernel)
 
                 random_forest, random_forest_error, best_max_features = self.createRandomForestRegressor(X_train, Y_train, X_test, Y_test)
                 errors["RF"].append(random_forest_error)
-                params["RF"].append(random_forest_error)
+                params["RF"].append(best_max_features)
 
                 ann, ann_error, best_layers = self.createANNR(X_train, Y_train, X_test, Y_test)
                 errors["ANN"].append(ann_error)
-                params["ANN"].append(ann_error)
+                params["ANN"].append(best_layers)
                 
                 tf = time()
-                print(f"Quedan {((tf - t0)/60) * (10000 - i)} minutos.")
+                print(f"Quedan {((tf - t0)/60) * (self.simulations - i)} minutos.")
 
             for model_name in list(errors.keys()):
                 errors[model_name] = np.mean(errors[model_name])
