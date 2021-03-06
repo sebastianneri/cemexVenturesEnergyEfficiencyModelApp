@@ -68,9 +68,16 @@ def get3DChart(df, rows, cols, html_file_name):
             
             meta = [titles[plot_num], df_combinations[plot_num][0], df_combinations[plot_num][1], df_combinations[plot_num][2]]
             
+            if df_combinations[plot_num][1] == "Dureza":
+                color = y
+            elif df_combinations[plot_num][2] == "Dureza":
+                color = z
+            else:
+                color = x
+
             scatter = go.Scatter3d(x=x,y=y,z=z, 
                                    mode='markers', 
-                                   marker=dict(size=12,color=z, colorscale='Viridis'))
+                                   marker=dict(size=12,color=color, colorscale='Plasma'))
             
             fig.add_trace(scatter, row=i, col=j)
             fig.update_scenes(xaxis = dict(title_text = df_combinations[plot_num][0]),
@@ -80,12 +87,12 @@ def get3DChart(df, rows, cols, html_file_name):
 
     fig.update_layout(
     title_text=f'{html_file_name}',
-    height=8200,
+    height=820*rows,
     width=1300,
     title_x=0.5,
     titlefont=dict(size=32)
     )
-    url = 'file://' + os.getcwd() + '/' + html_file_name + ".html"
-    fig.write_html(f"./{html_file_name}.html")
+    url = 'file://' + os.getcwd() + '/3DCharts/' + html_file_name + ".html"
+    fig.write_html(f"./3DCharts/{html_file_name}.html")
     print(f"Archivo en: {url}")
 
