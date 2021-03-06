@@ -55,7 +55,7 @@ class ModelEvaluation:
                 sigmas[model_name] = np.std(errors[model_name])
                 params[model_name] = list(cluster_model.value_counts().index[list(cluster_model.value_counts() == cluster_model.value_counts().max())])
             
-            models[str(c)].extend({"Parameters":params}, {"MSE": errors}, {"STD":sigmas})
+            models[str(c)].extend([{"Parameters":params}, {"MSE": errors}, {"STD":sigmas}])
         return models
             
 
