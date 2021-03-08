@@ -35,7 +35,10 @@ def removeOutliers(columns, df):
 
 def getHeatMap(df, corr_type):
     plt.figure(figsize=(30, 25))
-    sns.heatmap(df.corr(corr_type), annot=True)
+    if corr_type == '':
+        sns.heatmap(df, annot=True)
+    else:
+        sns.heatmap(df.corr(corr_type), annot=True)
 
 
 def get3DChart(df, rows, cols, html_file_name):
