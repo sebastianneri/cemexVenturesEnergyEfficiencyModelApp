@@ -128,7 +128,7 @@ class ModelEvaluation:
         kernels = ['linear', 'poly', 'rbf', 'sigmoid']
         errors = {}
         for kernel in kernels:
-            svr = SVR( kernel = kernel).fit(X_train, Y_train)
+            svr = MultiOutputRegressor(SVR( kernel = kernel)).fit(X_train, Y_train)
             y_pred = svr.predict(X_test)
             errors[kernel] = min_squared_error_cols(Y_test, y_pred)
 
