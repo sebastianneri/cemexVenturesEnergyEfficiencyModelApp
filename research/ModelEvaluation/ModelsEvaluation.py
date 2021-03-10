@@ -134,7 +134,7 @@ class ModelEvaluation:
 
         best_kernel = self.getBestParams(errors)
 
-        svr = SVR(kernel = best_kernel).fit(X_train, Y_train)
+        svr = MultiOutputRegressor(SVR(kernel = best_kernel)).fit(X_train, Y_train)
         y_pred = svr.predict(X_test)
         error = min_squared_error_cols(Y_test, y_pred)
         return svr, error, best_kernel        
