@@ -59,7 +59,9 @@ class ModelEvaluation:
             
             models[str(c)].extend([{"Parameters":params}, {"MSE": errors}, {"STD":sigmas}])
         return models
-            
+
+    def min_squared_error_cols(self, Y_true, y_pred):
+        return dict(((Y_true - y_pred)**2).mean())        
 
     def createANNR(self, X_train, Y_train, X_test, Y_test):
         errors = {}
@@ -138,9 +140,6 @@ class ModelEvaluation:
         y_pred = svr.predict(X_test)
         error = self.min_squared_error_cols(Y_test, y_pred)
         return svr, error, best_kernel        
-
-    def min_squared_error_cols(self, Y_true, y_pred):
-        return dict(((Y_true - y_pred)**2).mean())
 
     def getBestParams(self, errors_list):
         mean_errors = {}
