@@ -3,8 +3,8 @@ import pandas as pd
 from sklearn.svm import SVR
 from sklearn.tree import DecisionTreeRegressor
 from sklearn.ensemble import RandomForestRegressor
-from sklearn.metrics import mean_squared_error
 from sklearn.model_selection import cross_val_score, KFold
+from sklearn.multioutput import MultiOutputRegressor
 import tensorflow as tf
 from sklearn.model_selection import train_test_split
 from time import time
@@ -48,11 +48,13 @@ class ModelEvaluation:
                 
                 tf = time()
                 print(f"Quedan {((tf - t0)/60) * (self.simulations - i)} minutos.")
-
+            
+             
             for model_name in list(errors.keys()):
-                errors[model_name] = np.mean(errors[model_name])
+                errors_df = pd.DataFrame(errors[model_name]) 
+                errors[model_name] = errors_df.mean().to_dict()
                 cluster_model = pd.Series(params[model_name])
-                sigmas[model_name] = np.std(errors[model_name])
+                sigmas[model_name] = errors_df.std().to_dict()
                 params[model_name] = list(cluster_model.value_counts().index[list(cluster_model.value_counts() == cluster_model.value_counts().max())])
             
             models[str(c)].extend([{"Parameters":params}, {"MSE": errors}, {"STD":sigmas}])
@@ -65,20 +67,23 @@ class ModelEvaluation:
             ann = tf.keras.models.Sequential()
             ann.add(tf.keras.layers.Dense(units=i, activation='relu'))
             ann.add(tf.keras.layers.Dense(units=i, activation='relu'))
-            ann.add(tf.keras.layers.Dense(units=1))
+            ann.add(tf.keras.layers.Dense(units=3))
             ann.compile(optimizer = 'adam', loss = 'mean_squared_error')
             ann.fit(X_train, Y_train, batch_size = 32, epochs = 100)   
             y_pred = ann.predict(X_test)     
-            errors[int(i)] = mean_squared_error(Y_test, y_pred)
-        best_layers = int(min(errors))
+            errors[int(i)] = min_squared_error_cols(Y_test, y_pred)
+
+        best_layers = int(self.getBestParams(errors))
+
         ann = tf.keras.models.Sequential()
         ann.add(tf.keras.layers.Dense(units=best_layers, activation='relu'))
         ann.add(tf.keras.layers.Dense(units=best_layers, activation='relu'))
         ann.add(tf.keras.layers.Dense(units=1))
         ann.compile(optimizer = 'adam', loss = 'mean_squared_error')
         ann.fit(X_train, Y_train, batch_size = 32, epochs = 100)
-        y_pred = ann.predict(X_test)     
-        error = mean_squared_error(Y_test, y_pred)  
+        y_pred = ann.predict(X_test) 
+
+        error = min_squared_error_cols(Y_test, y_pred)  
         return ann, error, best_layers
 
     
@@ -92,12 +97,13 @@ class ModelEvaluation:
                 for max_feature in max_features_list:
                     tree = DecisionTreeRegressor(criterion=criterion, splitter=splitter, max_features=max_feature).fit(X_train, Y_train)
                     y_pred = tree.predict(X_test)
-                    errors[f"{criterion} {splitter} {max_feature}"] = mean_squared_error(Y_test, y_pred)
+                    errors[f"{criterion} {splitter} {max_feature}"] = min_squared_error_cols(Y_test, y_pred)
         
-        best_params = min(errors)
+        best_params = self.getBestParams(errors)
+
         tree = DecisionTreeRegressor(criterion= best_params.split(' ')[0], splitter=best_params.split(' ')[1], max_features=best_params.split(' ')[2]).fit(X_train, Y_train)
         y_pred = tree.predict(X_test)
-        error = mean_squared_error(Y_test, y_pred)
+        error = min_squared_error_cols(Y_test, y_pred)
         return tree, error, best_params
                 
 
@@ -108,11 +114,13 @@ class ModelEvaluation:
         for max_feature in max_features_list:
             random_forest = RandomForestRegressor(max_features=max_feature).fit(X_train, Y_train)
             y_pred = random_forest.predict(X_test)
-            errors[max_feature] = mean_squared_error(Y_test, y_pred)
-        best_max_features = min(errors)
+            errors[max_feature] = min_squared_error_cols(Y_test, y_pred)
+
+        best_max_features = self.getBestParams(errors)
+
         random_forest = RandomForestRegressor(max_features=best_max_features).fit(X_train, Y_train)
         y_pred = random_forest.predict(X_test)
-        error = mean_squared_error(Y_test, y_pred)
+        error = min_squared_error_cols(Y_test, y_pred)
         return random_forest, error, best_max_features
 
 
@@ -122,10 +130,20 @@ class ModelEvaluation:
         for kernel in kernels:
             svr = SVR( kernel = kernel).fit(X_train, Y_train)
             y_pred = svr.predict(X_test)
-            errors[kernel] = mean_squared_error(Y_test, y_pred)
-        best_kernel = min(errors)
+            errors[kernel] = min_squared_error_cols(Y_test, y_pred)
+
+        best_kernel = self.getBestParams(errors)
+
         svr = SVR(kernel = best_kernel).fit(X_train, Y_train)
         y_pred = svr.predict(X_test)
-        error = mean_squared_error(Y_test, y_pred)
+        error = min_squared_error_cols(Y_test, y_pred)
         return svr, error, best_kernel        
 
+    def min_squared_error_cols(self, Y_true, y_pred):
+        return dict(((Y_true - y_pred)**2).mean())
+
+    def getBestParams(self, errors_list):
+        mean_errors = {}
+        for error_dict in  errors_list:
+            mean_errors[error_dict] = np.mean(list(errors_list[error_dict].values()))
+        return min(mean_errors)
