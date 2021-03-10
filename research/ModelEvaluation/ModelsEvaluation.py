@@ -71,7 +71,7 @@ class ModelEvaluation:
             ann.compile(optimizer = 'adam', loss = 'mean_squared_error')
             ann.fit(X_train, Y_train, batch_size = 32, epochs = 100)   
             y_pred = ann.predict(X_test)     
-            errors[int(i)] = min_squared_error_cols(Y_test, y_pred)
+            errors[int(i)] = self.min_squared_error_cols(Y_test, y_pred)
 
         best_layers = int(self.getBestParams(errors))
 
@@ -83,7 +83,7 @@ class ModelEvaluation:
         ann.fit(X_train, Y_train, batch_size = 32, epochs = 100)
         y_pred = ann.predict(X_test) 
 
-        error = min_squared_error_cols(Y_test, y_pred)  
+        error = self.min_squared_error_cols(Y_test, y_pred)  
         return ann, error, best_layers
 
     
@@ -97,13 +97,13 @@ class ModelEvaluation:
                 for max_feature in max_features_list:
                     tree = DecisionTreeRegressor(criterion=criterion, splitter=splitter, max_features=max_feature).fit(X_train, Y_train)
                     y_pred = tree.predict(X_test)
-                    errors[f"{criterion} {splitter} {max_feature}"] = min_squared_error_cols(Y_test, y_pred)
+                    errors[f"{criterion} {splitter} {max_feature}"] = self.min_squared_error_cols(Y_test, y_pred)
         
         best_params = self.getBestParams(errors)
 
         tree = DecisionTreeRegressor(criterion= best_params.split(' ')[0], splitter=best_params.split(' ')[1], max_features=best_params.split(' ')[2]).fit(X_train, Y_train)
         y_pred = tree.predict(X_test)
-        error = min_squared_error_cols(Y_test, y_pred)
+        error = self.min_squared_error_cols(Y_test, y_pred)
         return tree, error, best_params
                 
 
@@ -114,13 +114,13 @@ class ModelEvaluation:
         for max_feature in max_features_list:
             random_forest = RandomForestRegressor(max_features=max_feature).fit(X_train, Y_train)
             y_pred = random_forest.predict(X_test)
-            errors[max_feature] = min_squared_error_cols(Y_test, y_pred)
+            errors[max_feature] = self.min_squared_error_cols(Y_test, y_pred)
 
         best_max_features = self.getBestParams(errors)
 
         random_forest = RandomForestRegressor(max_features=best_max_features).fit(X_train, Y_train)
         y_pred = random_forest.predict(X_test)
-        error = min_squared_error_cols(Y_test, y_pred)
+        error = self.min_squared_error_cols(Y_test, y_pred)
         return random_forest, error, best_max_features
 
 
@@ -130,13 +130,13 @@ class ModelEvaluation:
         for kernel in kernels:
             svr = MultiOutputRegressor(SVR( kernel = kernel)).fit(X_train, Y_train)
             y_pred = svr.predict(X_test)
-            errors[kernel] = min_squared_error_cols(Y_test, y_pred)
+            errors[kernel] = self.min_squared_error_cols(Y_test, y_pred)
 
         best_kernel = self.getBestParams(errors)
 
         svr = MultiOutputRegressor(SVR(kernel = best_kernel)).fit(X_train, Y_train)
         y_pred = svr.predict(X_test)
-        error = min_squared_error_cols(Y_test, y_pred)
+        error = self.min_squared_error_cols(Y_test, y_pred)
         return svr, error, best_kernel        
 
     def min_squared_error_cols(self, Y_true, y_pred):
