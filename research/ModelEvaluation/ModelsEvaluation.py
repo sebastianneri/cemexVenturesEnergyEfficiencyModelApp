@@ -20,12 +20,12 @@ class ModelEvaluation:
         self.results = self.createModels()
 
     def createModels(self):
-        models = {"1":[], "2":[], "3":[], "4":[], "5":[]}
+        models = {"1":{}, "2":{}, "3":{}, "4":{}, "5":{}}
         c = 0
         for cluster in self.clusters:
             c += 1
-            errors = {"Tree", "SVR", "RF", "ANN"}
-            params = {"Tree", "SVR", "RF", "ANN"}
+            errors = {"Tree":[], "SVR":[], "RF":[], "ANN":[]}
+            params = {"Tree":[], "SVR":[], "RF":[], "ANN":[]}
             for i in range(self.simulations):
                 t0 = time()
                 X_train, X_test, Y_train, Y_test = train_test_split(cluster[self.x_cols], cluster[self.y_cols], test_size=0.2)
