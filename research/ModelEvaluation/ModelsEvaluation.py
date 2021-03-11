@@ -49,8 +49,8 @@ class ModelEvaluation:
                 tf = time()
                 print(f"Quedan {((tf - t0)/60) * (self.simulations - i)} minutos.")
             
-            errors_99 = {}
-             
+            errors_99 = {"Tree":[], "SVR":[], "RF":[], "ANN":[]}
+
             for model_name in list(errors.keys()):
                 errors_df = pd.DataFrame(errors[model_name]) 
                 mean_errors = errors_df.mean().to_dict()
@@ -58,7 +58,6 @@ class ModelEvaluation:
                 cluster_model = pd.Series(params[model_name])
                 params[model_name] = list(cluster_model.value_counts().index[list(cluster_model.value_counts() == cluster_model.value_counts().max())])
                 for column_name in mean_errors:
-                    errors_99[column_name] = {}
                     errors_99[column_name][model_name] = st.norm.interval(0.99, loc= mean_errors[column_name], scale= sigmas[column_name]/np.sqrt(errors_df.shape[0]))
             
             models[str(c)] = {"Parameters":params, "MSE": errors_99}
