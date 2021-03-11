@@ -60,7 +60,7 @@ class ModelEvaluation:
                     errors_99[column_name] = st.norm.interval(0.99, loc= mean_errors[column_name], scale= sigmas[column_name]/np.sqrt(errors_df.shape[0]))
                 params[model_name] = list(cluster_model.value_counts().index[list(cluster_model.value_counts() == cluster_model.value_counts().max())])
             
-            models[str(c)] = {"Parameters":params, "MSE": errors}
+            models[str(c)] = {"Parameters":params, "MSE": errors_99}
         return models
 
     def min_squared_error_cols(self, Y_true, y_pred):
