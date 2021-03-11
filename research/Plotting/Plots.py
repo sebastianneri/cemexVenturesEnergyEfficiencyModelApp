@@ -7,7 +7,7 @@ import os
 from itertools import combinations
 
 def saveFigType(fig, type, data_type, name):
-    fig.savefig(f"./Plots/{type}/{data_type}/{name}.jpeg")
+    fig.get_figure().savefig(f"./Plots/{type}/{data_type}/{name}.jpeg")
 
 def getCBoxPlots(df, number):
     for i in df.columns:
