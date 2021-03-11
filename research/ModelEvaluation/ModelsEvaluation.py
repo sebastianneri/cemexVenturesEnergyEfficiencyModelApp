@@ -57,7 +57,7 @@ class ModelEvaluation:
                 cluster_model = pd.Series(params[model_name])
                 errors_99 = {}
                 for column_name in mean_errors:
-                    errors_99[column_name] = st.norm.interval(0.99, loc= mean_errors[column_name], scale= sigma[column_name]/np.sqrt(errors_df.shape[0]))
+                    errors_99[column_name] = st.norm.interval(0.99, loc= mean_errors[column_name], scale= sigmas[column_name]/np.sqrt(errors_df.shape[0]))
                 params[model_name] = list(cluster_model.value_counts().index[list(cluster_model.value_counts() == cluster_model.value_counts().max())])
             
             models[str(c)] = {"Parameters":params, "MSE": errors}
