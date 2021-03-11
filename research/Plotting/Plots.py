@@ -6,13 +6,16 @@ import webbrowser
 import os
 from itertools import combinations
 
+def saveFigType(fig, type, data_type, name):
+    fig.saveFigType(f"./Plots/{type}/{data_type}/{name}.jpeg")
+
 def getCBoxPlots(df, number):
     for i in df.columns:
         bp = sns.boxplot(df[i])
         bp.get_figure().savefig(f"./Plots/{i}{number}.png")
         bp.get_figure().clf()
 
-def getTableOfScatters(df):
+def getTableOfScatters(df, name=None):
     fig, axs = plt.subplots(len(df.columns), len(df.columns), figsize = (25, 25))
     c = -1
     p = -1
@@ -24,6 +27,8 @@ def getTableOfScatters(df):
             axs[p, c].set_xlabel(k)
             axs[p, c].set_ylabel(i)
         p = -1
+    if name != None:
+        fig.savefig(f"./Plots/Scatters/{name}.jpeg")
 
 def removeOutliers(columns, df):
     for i in columns:

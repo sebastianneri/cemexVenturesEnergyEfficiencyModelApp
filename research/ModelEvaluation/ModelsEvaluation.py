@@ -8,6 +8,7 @@ from sklearn.multioutput import MultiOutputRegressor
 import tensorflow as tf
 from sklearn.model_selection import train_test_split
 from time import time
+import scipy.stats as st
 
 class ModelEvaluation:
 
@@ -23,9 +24,8 @@ class ModelEvaluation:
         c = 0
         for cluster in self.clusters:
             c += 1
-            errors = {"Tree":[], "SVR":[], "RF":[], "ANN":[]}
-            sigmas = {"Tree":[], "SVR":[], "RF":[], "ANN":[]}
-            params = {"Tree":[], "SVR":[], "RF":[], "ANN":[]}
+            errors = {"Tree", "SVR", "RF", "ANN"}
+            params = {"Tree", "SVR", "RF", "ANN"}
             for i in range(self.simulations):
                 t0 = time()
                 X_train, X_test, Y_train, Y_test = train_test_split(cluster[self.x_cols], cluster[self.y_cols], test_size=0.2)
@@ -52,12 +52,15 @@ class ModelEvaluation:
              
             for model_name in list(errors.keys()):
                 errors_df = pd.DataFrame(errors[model_name]) 
-                errors[model_name] = errors_df.mean().to_dict()
+                mean_errors = errors_df.mean().to_dict()
+                sigmas = errors_df.std().to_dict()
                 cluster_model = pd.Series(params[model_name])
-                sigmas[model_name] = errors_df.std().to_dict()
+                errors_99 = {}
+                for column_name in mean_errors:
+                    errors_99[column_name] = st.norm.interval(0.99, loc= mean_errors[column_name], scale= sigma[column_name]/np.sqrt(errors_df.shape[0]))
                 params[model_name] = list(cluster_model.value_counts().index[list(cluster_model.value_counts() == cluster_model.value_counts().max())])
             
-            models[str(c)].extend([{"Parameters":params}, {"MSE": errors}, {"STD":sigmas}])
+            models[str(c)] = {"Parameters":params, "MSE": errors}
         return models
 
     def min_squared_error_cols(self, Y_true, y_pred):
