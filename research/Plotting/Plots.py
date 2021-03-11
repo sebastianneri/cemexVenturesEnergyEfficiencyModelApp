@@ -41,7 +41,7 @@ def removeOutliers(columns, df):
 def getHeatMap(df, corr_type=None, type=None, data_type=None, name=None):
     plt.figure(figsize=(30, 25))
     if corr_type == None:
-        if type == None
+        if type == None:
             heat = sns.heatmap(df, annot=True)
         elif type == "WS":
             heat = sns.heatmap(df, annot=True, cmap="RdYlGn")
