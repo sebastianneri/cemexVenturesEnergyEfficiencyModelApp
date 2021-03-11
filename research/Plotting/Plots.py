@@ -38,12 +38,17 @@ def removeOutliers(columns, df):
         df = df[(df[i] >= q1_q - 1.5*iqr_q) & (df[i] <= q3_q + 1.5*iqr_q)]
     return df
 
-def getHeatMap(df, corr_type):
+def getHeatMap(df, corr_type=None, type=None, data_type=None, name=None):
     plt.figure(figsize=(30, 25))
-    if corr_type == '':
-        sns.heatmap(df, annot=True)
+    if corr_type == None:
+        if type == None
+            heat = sns.heatmap(df, annot=True)
+        elif type == "WS":
+            heat = sns.heatmap(df, annot=True, cmap="RdYlGn")
     else:
-        sns.heatmap(df.corr(corr_type), annot=True)
+        heat = sns.heatmap(df.corr(corr_type), annot=True)
+    if name != None and data_type != None:
+        saveFigType(heat, "Heatmaps", data_type, name)
 
 
 def get3DChart(df, rows, cols, html_file_name):
