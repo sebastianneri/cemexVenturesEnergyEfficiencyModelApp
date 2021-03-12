@@ -1,0 +1,24 @@
+{
+    "cluster" : int,
+    "CM" : {
+        "SVM":{
+            "value":float,
+            "mse_interval" : list,
+        },
+        "RF":{
+            "value":float,
+            "mse_interval" : list,
+        }
+    },
+    "CM_95" : {
+        "SVM_95":{
+            "value":float,
+            "mse_interval" : list,
+        },
+        "RF_95":{
+            "value":float,
+            "mse_interval" : list,
+        }
+    }
+
+}
