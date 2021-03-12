@@ -1,24 +1,50 @@
 {
     "cluster" : int,
-    "CM" : {
+    "CM": {
         "SVM":{
-            "value":float,
-            "mse_interval" : list,
+            "value": float,
+            "mse_interval" : {
+                                'Costo_TP': [0.4638980177272525, 0.5988461073670832],
+                                'EC_TP': [0.8006838394156779, 0.9397799049147946],
+                                'EE_TP': [0.46389801772725203, 0.5988461073670834]
+            },
         },
         "RF":{
-            "value":float,
-            "mse_interval" : list,
+            "value": float,
+            "mse_interval": {
+                                'Costo_TP': [0.5866333455174619, 0.6968119367902468],
+                                'EC_TP': [0.9829736609909774, 1.0993716732153698],
+                                'EE_TP': [0.5866333455174619, 0.696811936790247]}
         }
     },
     "CM_95" : {
         "SVM_95":{
             "value":float,
-            "mse_interval" : list,
+            "mse_interval": list,
         },
         "RF_95":{
             "value":float,
-            "mse_interval" : list,
+            "mse_interval": list,
+        }
+    },
+    "CMG" : {
+        "SVM":{
+            "value":float,
+            "mse_interval": list,
+        },
+        "RF":{
+            "value":float,
+            "mse_interval": list,
+        }
+    },
+    "CMG_95" : {
+        "SVM_95":{
+            "value":float,
+            "mse_interval": list,
+        },
+        "RF_95":{
+            "value":float,
+            "mse_interval": list,
         }
     }
-
 }
