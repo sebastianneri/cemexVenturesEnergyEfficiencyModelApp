@@ -20,14 +20,13 @@ class ModelEvaluation:
         self.results = self.createModels()
 
     def createModels(self):
-        models = {"1":{}, "2":{}, "3":{}, "4":{}, "5":{}}
+        models = {"df":{}, "1":{}, "2":{}, "3":{}, "4":{}, "5":{}}
         c = 0
         for cluster in self.clusters:
             c += 1
             errors = {"Tree":[], "SVR":[], "RF":[], "ANN":[]}
             params = {"Tree":[], "SVR":[], "RF":[], "ANN":[]}
             for i in range(self.simulations):
-                t0 = time()
                 X_train, X_test, Y_train, Y_test = train_test_split(cluster[self.x_cols], cluster[self.y_cols], test_size=0.2)
                 
                 tree, tree_error, best_params = self.createDesitionTreeRegressor(X_train, Y_train, X_test, Y_test)
@@ -46,8 +45,6 @@ class ModelEvaluation:
                 errors["ANN"].append(ann_error)
                 params["ANN"].append(best_layers)
                 
-                tf = time()
-                print(f"Quedan {((tf - t0)/60) * (self.simulations - i)} minutos.")
             
             errors_99 = {"Tree":[], "SVR":[], "RF":[], "ANN":[]}
 

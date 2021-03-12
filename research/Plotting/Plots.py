@@ -44,7 +44,7 @@ def getHeatMap(df, corr_type=None, type=None, data_type=None, name=None):
         if type == None:
             heat = sns.heatmap(df, annot=True)
         elif type == "WS":
-            heat = sns.heatmap(df, annot=True, cmap="RdYlGn")
+            heat = sns.heatmap(df, annot=True, cmap="RdYlGn", center = 0)
     else:
         heat = sns.heatmap(df.corr(corr_type), annot=True)
     if name != None and data_type != None:
