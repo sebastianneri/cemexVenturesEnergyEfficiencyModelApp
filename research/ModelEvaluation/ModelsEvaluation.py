@@ -70,7 +70,7 @@ class ModelEvaluation:
             ann = tf.keras.models.Sequential()
             ann.add(tf.keras.layers.Dense(units=i, activation='relu'))
             ann.add(tf.keras.layers.Dense(units=i, activation='relu'))
-            ann.add(tf.keras.layers.Dense(units=3))
+            ann.add(tf.keras.layers.Dense(units= len(self.y_cols)))
             ann.compile(optimizer = 'adam', loss = 'mean_squared_error')
             ann.fit(X_train, Y_train, batch_size = 32, epochs = 100)   
             y_pred = ann.predict(X_test)     
