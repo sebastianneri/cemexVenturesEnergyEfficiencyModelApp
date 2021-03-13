@@ -1,3 +1,9 @@
 # Cemex Ventures Energy Efficiency Models
 
 Se busca poder minimizar el costo por tasa de producción con la combinación de la energía eléctrica y calorífica utilizada por un proceso de metalurgia, a partir de la calidad, dureza y tasa de producción de un material. Dadas las propiedades de los datos, se clusterizaron para optimizar su rendimiento en los modelos de regresión no lineal y se modelaron con las librerías de python Scipy y Scikitlearn para obtener la calidad máxima con el costo mínimo.
+
+## Introducción 
+
+Cemex cuenta con una fábrica que produce soportes metálicos con los que abastece un mercado. Para llevar a cabo el proceso de fabricación se utiliza maquinaria con Diesel y maquinaria con energía eléctrica. Se busca encontrar la producción en la que se utilice la menor cantidad de energía, tanto calórica como eléctrica, sin que se vea afectada la calidad. No se busca aumentar o disminuir la calidad, se busca que sabiendo la dureza del material crudo, la tasa de producción y la calidad dentro de un rango determinado, se encuentre las condiciones óptimas en la energía utilizada. Se sabe que una energía, la energía calórica es un 30% más económica que la energía eléctrica, sin embargo se necesita de ambos tipos de energía para llevar a cabo el proceso de producción, ya que se llevan a cabo procesos tanto de maquinaria antigua que funciona con Diesel, como también maquinaria moderna que requiere de energía eléctrica. La razón por la cual ambos tipos de máquinas son utilizadas, es por la eficiencia de dichas máquinas, siendo la maquinaria más cara (Energía eléctrica) también la más eficiente en la tasa de producción. Esto se debe a los materiales utilizados para este tipo de maquinaria.  
+
+Más información disponible en el [paper](https://github.com/sebastianneri/cemexVenturesEnergyEfficiencyModelApp/blob/master/research/Energy%20Efficiency%20Research.pdf)
