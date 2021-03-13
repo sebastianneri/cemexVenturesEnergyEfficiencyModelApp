@@ -1,0 +1,3 @@
+# Cemex Ventures Energy Efficiency Models
+
+Se busca poder minimizar el costo por tasa de producción con la combinación de la energía eléctrica y calorífica utilizada por un proceso de metalurgia, a partir de la calidad, dureza y tasa de producción de un material. Dadas las propiedades de los datos, se clusterizaron para optimizar su rendimiento en los modelos de regresión no lineal y se modelaron con las librerías de python Scipy y Scikitlearn para obtener la calidad máxima con el costo mínimo.
